@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Rapid Assessment of Vastus Lateralis Muscle Endurance in Older Adults</title>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; background: #eef2f8; margin: 0; padding: 20px; }
+        .container { max-width: 560px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 12px 28px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.02); padding: 28px 24px 36px; transition: all 0.2s ease; }
+        h1 { font-size: 1.8rem; text-align: center; margin: 0 0 6px; color: #1e3c5c; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .sub { text-align: center; font-size: 0.85rem; color: #5a6e7c; margin-bottom: 28px; border-bottom: 1px solid #e6edf4; padding-bottom: 16px; font-weight: 500; }
+        .input-group { margin-bottom: 24px; }
+        label { display: block; font-weight: 600; margin-bottom: 10px; color: #1e3c5c; font-size: 0.95rem; }
+        input, select { width: 100%; padding: 14px 18px; font-size: 1rem; border: 1.5px solid #dce5ef; border-radius: 60px; background: #ffffff; transition: 0.2s; font-family: inherit; }
+        input:focus, select:focus { border-color: #2c7da0; outline: none; box-shadow: 0 0 0 3px rgba(44,125,160,0.2); }
+        .radio-group { display: flex; gap: 28px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+        .radio-group label { font-weight: 500; margin-bottom: 0; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc; padding: 6px 14px; border-radius: 40px; transition: 0.1s; }
+        .radio-group input { width: 18px; height: 18px; margin: 0; accent-color: #2c7da0; }
+        .dynamic-input { margin-top: 12px; animation: fadeSlide 0.2s ease; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .btn { background: #2c7da0; color: white; border: none; width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 700; border-radius: 60px; margin: 16px 0 20px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .btn:active { background: #1f5e7a; transform: scale(0.97); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .result { background: #f0f6fe; border-radius: 32px; padding: 20px 22px; margin-top: 12px; border: 1px solid #d9e6f2; }
+        .result-item { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; font-size: 1rem; flex-wrap: wrap; gap: 8px; }
+        .result-label { font-weight: 600; color: #1f4662; }
+        .result-value { font-weight: 700; color: #0b3550; background: white; padding: 4px 12px; border-radius: 40px; font-family: monospace; font-size: 1rem; }
+        .grade { font-size: 1.3rem; font-weight: 800; text-align: center; padding: 14px 12px; border-radius: 60px; margin: 16px 0 10px; letter-spacing: 1px; }
+        .grade.normal { background: #d1fae5; color: #065f46; border-left: 5px solid #059669; }
+        .grade.warning { background: #fee2e2; color: #991b1b; border-left: 5px solid #dc2626; }
+        .advice-text { background: #ffffffc9; border-radius: 24px; padding: 10px 14px; margin-top: 8px; font-size: 0.9rem; line-height: 1.4; }
+        .note { font-size: 0.72rem; color: #5f7d9c; text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2eaf1; background: #fefefe; border-radius: 20px; }
+        footer { text-align: center; font-size: 0.7rem; color: #8ba0b2; margin-top: 18px; }
+        .badge-info { display: inline-block; background: #e6f0f9; border-radius: 50px; padding: 2px 8px; font-size: 0.7rem; font-weight: normal; margin-left: 8px; }
+        @media (max-width: 480px) { .container { padding: 20px 16px 28px; } .result-item { flex-direction: column; align-items: flex-start; gap: 6px; } .grade { font-size: 1.2rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏃 Vastus Lateralis Endurance Assessment <span class="badge-info">Community Edition v1.0</span></h1>
+    <div class="sub">Based on Near-Infrared Spectroscopy · Rapid Screening of Lower‑Limb Oxygen Kinetics</div>
+    
+    <div class="input-group">
+        <label>📌 30‑second sit‑to‑stand test (repetitions)</label>
+        <input type="number" id="sts" placeholder="e.g., 14" min="0" max="30" step="1" value="14">
+    </div>
+    
+    <div class="input-group">
+        <label>📏 Skinfold thickness (mm) &nbsp; <span style="font-weight:normal; font-size:0.8rem;">affects NIRS signal correction</span></label>
+        <div class="radio-group">
+            <label><input type="radio" name="skinfoldType" value="manual"> Measured value</label>
+            <label><input type="radio" name="skinfoldType" value="default" checked> Sex‑specific default</label>
+        </div>
+        <div id="skinfoldManualDiv" class="dynamic-input" style="display: none;">
+            <input type="number" id="skinfoldManual" placeholder="Enter measured skinfold thickness (mm)" step="0.1" value="10.0">
+        </div>
+        <div id="skinfoldDefaultDiv" class="dynamic-input">
+            <select id="genderDefault">
+                <option value="male">Male (default 8 mm)</option>
+                <option value="female">Female (default 12 mm)</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn" id="calcBtn">✨ Start Assessment ✨</button>
+    
+    <div id="resultPanel" style="display: none;">
+        <div class="result">
+            <div class="result-item"><span class="result-label">📊 Estimated raw τSmO₂</span><span class="result-value" id="tauRaw">--</span></div>
+            <div class="result-item"><span class="result-label">🔧 Skinfold‑corrected τSmO₂</span><span class="result-value" id="tauCorr">--</span></div>
+            <div id="gradeBox" class="grade"></div>
+            <div class="result-item"><span class="result-label">💡 Recommendation</span><span class="result-value" id="advice" style="background: none; font-weight: 500; font-family: inherit;">--</span></div>
+            <div class="note" style="margin-top: 12px; background: none; border-top: none; padding-top: 0; font-size:0.7rem;">※ Correction formula: τ_corr = τ_raw − 0.12 × (skinfold thickness − 9.2)</div>
+        </div>
+    </div>
+
+    <div class="note">⚕️ Developed using NIRS data from community‑dwelling older adults (aged 65‑85 years). If skinfold thickness >15 mm, consider integrating functional performance tests.<br>🧠 Normal endurance: τSmO₂ < 4.8 s; Reduced endurance: τSmO₂ ≥ 4.8 s</div>
+    <footer>Based on the CEI index · Open‑source screening tool | For research & health screening only; not a clinical diagnostic device</footer>
+</div>
+
+<script>
+    (function() {
+        function estimateTauRaw(sts) {
+            let tau = (23.6 - sts) / 2.35;
+            if (tau < 1.0) tau = 1.0;
+            if (tau > 7.0) tau = 7.0;
+            return Math.round(tau * 100) / 100;
+        }
+        function correctTauBySkinfold(tauRaw, skinfold) {
+            let tauCorr = tauRaw - 0.12 * (skinfold - 9.2);
+            if (tauCorr < 0.8) tauCorr = 0.8;
+            if (tauCorr > 8.0) tauCorr = 8.0;
+            return Math.round(tauCorr * 100) / 100;
+        }
+        function getGradeAndAdvice(tauCorr) {
+            if (tauCorr < 4.8) {
+                return { grade: "✅ Normal endurance", gradeShort: "Normal endurance", advice: "Maintain current physical activity. Perform lower‑limb resistance training (seated knee extension, brisk walking, or chair squats) 2–3 times weekly to sustain muscle oxidative capacity.", cssClass: "normal" };
+            } else {
+                let extraMsg = (tauCorr >= 6.0) ? " ⚠️ Slow oxygen recovery; priority on low‑intensity aerobic and resistance training." : "";
+                return { grade: "⚠️ Reduced endurance", gradeShort: "Reduced endurance", advice: "Implement lower‑limb resistance training (wall squat, seated leg raise, heel raise with chair support). Adopt intermittent activity: rest 2 minutes after every 8–10 minutes of daily tasks." + extraMsg, cssClass: "warning" };
+            }
+        }
+        function getSkinfoldValue() {
+            let type = document.querySelector('input[name="skinfoldType"]:checked').value;
+            if (type === "manual") {
+                let manualVal = parseFloat(document.getElementById("skinfoldManual").value);
+                if (isNaN(manualVal) || manualVal <= 0) { alert("Please enter a valid positive skinfold thickness (mm)."); return null; }
+                if (manualVal > 40 && !confirm("Skinfold thickness exceeds 40 mm. Extrapolation may introduce bias. Proceed anyway?")) return null;
+                return manualVal;
+            } else {
+                let gender = document.getElementById("genderDefault").value;
+                return (gender === "male") ? 8.0 : 12.0;
+            }
+        }
+        function toggleSkinfoldInputs() {
+            let type = document.querySelector('input[name="skinfoldType"]:checked').value;
+            document.getElementById("skinfoldManualDiv").style.display = type === "manual" ? "block" : "none";
+            document.getElementById("skinfoldDefaultDiv").style.display = type === "default" ? "block" : "none";
+        }
+        function performEvaluation() {
+            let sts = parseInt(document.getElementById("sts").value);
+            if (isNaN(sts) || sts < 0 || sts > 30) { alert("Please enter a number of repetitions between 0 and 30."); return; }
+            let skinfold = getSkinfoldValue();
+            if (skinfold === null) return;
+            let tauRaw = estimateTauRaw(sts);
+            let tauCorr = correctTauBySkinfold(tauRaw, skinfold);
+            let { grade, gradeShort, advice, cssClass } = getGradeAndAdvice(tauCorr);
+            document.getElementById("tauRaw").innerHTML = `<strong style="font-weight:800;">${tauRaw}</strong> s`;
+            document.getElementById("tauCorr").innerHTML = `<strong style="font-weight:800;">${tauCorr}</strong> s`;
+            document.getElementById("advice").innerHTML = advice;
+            let gradeBox = document.getElementById("gradeBox");
+            gradeBox.className = "grade " + cssClass;
+            gradeBox.innerHTML = grade;
+            if (skinfold > 15) {
+                let extraNote = document.createElement("div");
+                extraNote.className = "advice-text";
+                extraNote.style.marginTop = "12px";
+                extraNote.style.fontSize = "0.75rem";
+                extraNote.style.backgroundColor = "#fff7e5";
+                extraNote.style.borderRadius = "20px";
+                extraNote.style.padding = "8px 12px";
+                extraNote.innerHTML = "📌 Note: Skinfold thickness >15 mm may attenuate NIRS signals; combine with gait speed or perceived exertion for robust assessment.";
+                let oldNote = document.getElementById("dynamicSkinNote");
+                if (oldNote) oldNote.remove();
+                extraNote.id = "dynamicSkinNote";
+                gradeBox.insertAdjacentElement('afterend', extraNote);
+            } else {
+                let oldNote = document.getElementById("dynamicSkinNote");
+                if (oldNote) oldNote.remove();
+            }
+            document.getElementById("resultPanel").style.display = "block";
+            document.getElementById("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        document.querySelectorAll('input[name="skinfoldType"]').forEach(radio => radio.addEventListener("change", toggleSkinfoldInputs));
+        document.getElementById("calcBtn").addEventListener("click", performEvaluation);
+        document.getElementById("sts").addEventListener("keypress", e => { if (e.key === "Enter") performEvaluation(); });
+        document.getElementById("skinfoldManual")?.addEventListener("keypress", e => { if (e.key === "Enter") performEvaluation(); });
+        toggleSkinfoldInputs();
+    })();
+</script>
+</body>
+</html>
